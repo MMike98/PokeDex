@@ -1,0 +1,48 @@
+.nav-tabs .nav-link {
+    font-size: 0.75rem;
+    color: #0066ff;
+    border: none;
+    background: transparent;
+}
+
+.nav-tabs .nav-link.active {
+    color: black;
+    border: 2px solid #cfcfcf;
+    border-radius: 8px;
+    background-color: #f0f0f0;
+}
+
+.progress {
+    height: 28px;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    margin-bottom: 10px;
+}
+
+.progress-bar {
+    font-size: 0.65rem;
+    color: #fff;
+    text-align: left;
+    padding-left: 10px;
+    background-image: repeating-linear-gradient(45deg,
+            #2e7d32,
+            #2e7d32 10px,
+            #1b5e20 10px,
+            #1b5e20 20px);
+    border-radius: 15px;
+}
+
+.evolution-stages {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.evolution-stage {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px 0;
+    text-align: center;
+    cursor: pointer;
+}

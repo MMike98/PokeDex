@@ -1,0 +1,58 @@
+header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    padding-inline: 30px;
+    padding: 10px;
+}
+
+.header-container {
+    max-width: 1920px;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+header img {
+    height: 90px;
+    cursor: pointer;
+}
+
+.header-search {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20rem;
+    gap: 1rem;
+}
+
+.pokedex-footer {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.pokedex-footer p {
+    margin: 5px 0;
+}
+
+.pokedex-footer a {
+    color: yellow;
+    text-decoration: none;
+}
+
+.pokedex-footer a:hover {
+    text-decoration: underline;
+}
+
+@media (max-width: 650px) {
+    .header-container {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    footer p {
+        font-size: 0.6rem;
+    }
+}

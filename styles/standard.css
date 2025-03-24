@@ -1,0 +1,19 @@
+main {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: #f4f4f4;
+    padding: 20px;
+    min-height: 90vh;
+}
+
+section {
+    margin-block: 50px;
+    max-width: 1920px;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    flex-direction: column;
+}

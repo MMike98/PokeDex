@@ -1,0 +1,44 @@
+
+.card img {
+    width: 150px;
+    position: relative;
+    top: -30px;
+    padding: 10px;
+}
+
+.normal-img {
+    display: block;
+    height: 100px;
+}
+
+.shiny-img {
+    display: none;
+    height: 100px;
+}
+
+.evolution-stage:hover .shiny-img {
+    display: block;
+    transform: translateY(-10px);
+    transition: 0.3s;
+}
+
+.evolution-stage:hover .normal-img {
+    display: none;
+}
+
+.text-center img {
+    height: 200px;
+    width: 200px;
+}
+
+@media (max-width: 650px) {
+    .card img {
+        width: 120px;
+        top: -20px;
+    }
+
+    .text-center img {
+        height: 150px;
+        width: 150px;
+    }
+}
