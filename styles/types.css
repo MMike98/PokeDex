@@ -1,72 +1,143 @@
-
 .type-normal {
     background-color: #A8A878;
+}
+.normal:hover {
+    background-color: #8C8C60;
+    box-shadow: 0 0 10px #8C8C60;
 }
 
 .type-fighting {
     background-color: #C03028;
 }
+.fighting:hover {
+    background-color: #9B2320;
+    box-shadow: 0 0 10px #9B2320;
+}
 
 .type-flying {
     background-color: #A890F0;
 }
+.flying:hover {
+    background-color: #8673D1;
+    box-shadow: 0 0 10px #8673D1;
+}
 
 .type-poison {
-    background-color: #A040A0;
+    background-color: #B84AB8;
+}
+.poison:hover {
+    background-color: #8E2CA8;
+    box-shadow: 0 0 10px #8E2CA8;
 }
 
 .type-ground {
     background-color: #E0C068;
 }
+.ground:hover {
+    background-color: #B89A40;
+    box-shadow: 0 0 10px #B89A40;
+}
 
 .type-rock {
     background-color: #B8A038;
+}
+.rock:hover {
+    background-color: #8F7C2A;
+    box-shadow: 0 0 10px #8F7C2A;
 }
 
 .type-bug {
     background-color: #A8B820;
 }
+.bug:hover {
+    background-color: #889917;
+    box-shadow: 0 0 10px #889917;
+}
 
 .type-ghost {
     background-color: #705898;
+}
+.ghost:hover {
+    background-color: #564176;
+    box-shadow: 0 0 10px #564176;
 }
 
 .type-steel {
     background-color: #B8B8D0;
 }
+.steel:hover {
+    background-color: #9797B3;
+    box-shadow: 0 0 10px #9797B3;
+}
 
 .type-fire {
     background-color: #F08030;
+}
+.fire:hover {
+    background-color: #C06020;
+    box-shadow: 0 0 10px #C06020;
 }
 
 .type-water {
     background-color: #6890F0;
 }
+.water:hover {
+    background-color: #4A6FC4;
+    box-shadow: 0 0 10px #4A6FC4;
+}
 
 .type-grass {
     background-color: #78C850;
+}
+.grass:hover {
+    background-color: #5AA133;
+    box-shadow: 0 0 10px #5AA133;
 }
 
 .type-electric {
     background-color: #F8D030;
 }
+.electric:hover {
+    background-color: #D0B020;
+    box-shadow: 0 0 10px #D0B020;
+}
 
 .type-psychic {
     background-color: #F85888;
+}
+.psychic:hover {
+    background-color: #CC3A66;
+    box-shadow: 0 0 10px #CC3A66;
 }
 
 .type-ice {
     background-color: #98D8D8;
 }
+.ice:hover {
+    background-color: #76BFBF;
+    box-shadow: 0 0 10px #76BFBF;
+}
 
 .type-dragon {
     background-color: #7038F8;
+}
+.dragon:hover {
+    background-color: #4F20C0;
+    box-shadow: 0 0 10px #4F20C0;
 }
 
 .type-dark {
     background-color: #705848;
 }
+.dark:hover {
+    background-color: #554235;
+    box-shadow: 0 0 10px #554235;
+}
 
 .type-fairy {
     background-color: #EE99AC;
+}
+.fairy:hover {
+    background-color: #D4788E;
+    box-shadow: 0 0 10px #D4788E;
 }

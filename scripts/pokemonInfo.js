@@ -11,10 +11,12 @@ function getPokemonAbilities(pokemonToJSON) {
 }
 
 function getPokemonTypes(pokemonToJSON) {
+    console.log(pokemonToJSON);
     return pokemonToJSON.types.map(type => {
-        return `<span class="type-badge type-${type.type.name}">${type.type.name}</span>`;
+        return {
+            type: type.type.name,
+        }
     })
-        .join('');
 }
 
 function getPokemonStats(pokemonToJSON) {

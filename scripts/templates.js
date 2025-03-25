@@ -1,14 +1,22 @@
 function getTemplatePokemon(iPoke) {
     return `
-        <div class="card pokemon-card" data-id="${PokemonList[iPoke].id}" onclick="creatModal(${PokemonList[iPoke].id})">
+        <div class="card pokemon-card ${PokemonList[iPoke].types[0].type}" data-id="${PokemonList[iPoke].id}" onclick="creatModal(${PokemonList[iPoke].id})">
             <img src="${PokemonList[iPoke].sprites.front_default}" class="card-img-top" alt="${PokemonList[iPoke].name}">
             <div class="card-body">
                 <p class="card-number">N°${PokemonList[iPoke].id}</p>
                 <h5 class="card-title">${PokemonList[iPoke].name}</h5>
-                <div class="pokemon-types">${PokemonList[iPoke].types}</div>
+                <div class="pokemon-types">${getTemplatePokemonTypes(PokemonList[iPoke].types)}</div>
             </div>
         </div>
     `;
+}
+
+function getTemplatePokemonTypes(Types) {
+    console.log(Types);
+    return Types.map(type => {
+        return `<span class="type-badge type-${type.type}">${type.type}</span>`;
+    })
+        .join('');
 }
 
 function modalPokemon(iPoke) {
