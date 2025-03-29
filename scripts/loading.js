@@ -3,5 +3,7 @@ function showLoading() {
 }
 
 function hideLoading() {
-    document.getElementById("loading-screen").style.display = "none";
+    setTimeout(() => {
+        document.getElementById("loading-screen").style.display = "none";
+    }, 500)
 }

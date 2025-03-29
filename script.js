@@ -1,52 +1,61 @@
 
 let PokemonTypes = ["normal", "fire", "water", "electric", "grass", "ice", "fighting", "poison", "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"];
 let PokemonList = [];
+let allPokemonList = [];
 let modal = new bootstrap.Modal(document.getElementById("pokemonModal"));
 let minLimit = 0;
 let maxLimit = 20;
+let pageSize = 20;
+
 
 async function init() {
     showLoading();
     document.getElementById("Amount").style.display = "flex";
     document.getElementById("Btns").style.display = "flex";
-    await loadPokemons();
+    await loadAllPokemons();
+    await renderPokemons();
     hideLoading();
 }
 
-function getPokemonAPI() {
-    return `https://pokeapi.co/api/v2/pokemon?offset=${minLimit}&limit=${maxLimit}`;
-}
-
-async function loadPokemons() {
+async function loadAllPokemons() {
+    allPokemonList = [];
     PokemonList = [];
-    response = await fetch(getPokemonAPI());
-    data = await response.json();
-    await getPokemonsInfo(data.results);
-    renderPokemons();
+    let response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1025`);
+    let data = await response.json();
+    data.results.forEach(pokemon => {
+        allPokemonList.push({
+            name: pokemon.name,
+            info: pokemon.url
+        });
+    });
 }
 
 async function renderPokemons() {
     let cardsContainer = document.getElementById("cards");
     cardsContainer.innerHTML = "";
-
-    for (let iPoke = 0; iPoke < PokemonList.length; iPoke++) {
-        cardsContainer.innerHTML += getTemplatePokemon(iPoke);
-    }
+    for (let iPoke = minLimit; iPoke < maxLimit; iPoke++) {
+        PokemonList.push({
+            name: allPokemonList[iPoke].name,
+            info: allPokemonList[iPoke].info
+        });
+        let pokemonInfo = await fetch(allPokemonList[iPoke].info);
+        let pokemonToJSON = await pokemonInfo.json();
+        cardsContainer.innerHTML += getTemplatePokemon(pokemonToJSON);
+    }    
 }
 
-async function creatModal(id) {
+async function openModal(name) {
+    showLoading();
     let modalBody = document.getElementById("modal-content");
-    await openModal(id, modal, modalBody);
+
+    let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+    let data = await response.json();
+
+    modalBody.innerHTML = await modalPokemon(data);
+    hideLoading();
     modal.show();
 }
 
-async function openModal(id, modal, modalBody) {
-    let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
-    let data = await response.json();
-    PokemonList= [];
-    await PokemonListUpdate(data);
-    modalBody.innerHTML = modalPokemon(0);
-}
 
 async function getPokemonImage(pokemonUrl) {
     let response = await fetch(pokemonUrl);
@@ -62,11 +71,4 @@ async function getPokemonImageShinny(pokemonUrl) {
     let responseImage = await fetch(`https://pokeapi.co/api/v2/pokemon/${data.id}`);
     let dataImage = await responseImage.json();
     return dataImage.sprites.front_shiny;
-}
-
-async function updateModal(name) {
-    let response = await fetch (`https://pokeapi.co/api/v2/pokemon/${name}`);
-    let data = await response.json();
-    let id = data.id;
-    creatModal(id);
 }

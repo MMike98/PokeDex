@@ -1,5 +1,5 @@
 .nav-tabs .nav-link {
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: #0066ff;
     border: none;
     background: transparent;
@@ -20,7 +20,7 @@
 }
 
 .progress-bar {
-    font-size: 0.65rem;
+    font-size: 0.875rem;
     color: #fff;
     text-align: left;
     padding-left: 10px;
@@ -48,7 +48,23 @@
 }
 
 .modal-content {
-    border-radius: 30px;
+    border-radius: 30px !important;
+}
+
+.modal-header {
+    text-align: center;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+}
+.modal-title {
+    width: 100%;
+    text-align: center;
+}
+
+.modal-footer {
+    border-top : 1px solid #cfcfcf !important;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
 }
 
 .btn {

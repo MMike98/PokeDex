@@ -1,41 +1,54 @@
-function getTemplatePokemon(iPoke) {
+function getTemplatePokemon(Pokemon) {
     return `
-        <div class="card pokemon-card ${PokemonList[iPoke].types[0].type}" data-id="${PokemonList[iPoke].id}" onclick="creatModal(${PokemonList[iPoke].id})">
-            <img src="${PokemonList[iPoke].sprites.front_default}" class="card-img-top" alt="${PokemonList[iPoke].name}">
+        <div class="card pokemon-card ${Pokemon.types[0].type.name}" onclick="openModal('${Pokemon.name}')">
+            <img src="${Pokemon.sprites.front_default}" class="card-img-top" alt="${Pokemon.name}">
             <div class="card-body">
-                <p class="card-number">N°${PokemonList[iPoke].id}</p>
-                <h5 class="card-title">${PokemonList[iPoke].name}</h5>
-                <div class="pokemon-types">${getTemplatePokemonTypes(PokemonList[iPoke].types)}</div>
+                <p class="card-number">N°${Pokemon.id}</p>
+                <h5 class="card-title">${Pokemon.name}</h5>
+                <div class="pokemon-types">${getTemplatePokemonTypes(Pokemon.types)}</div>
             </div>
         </div>
     `;
 }
 
+async function modalPokemon(data) {
+    return `
+        <div class="modal-header">
+            <h5 class="modal-title">${data.name}</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="modal-body">
+            ${await getTemplatePokemonModal(data)}
+        </div>
+        <div class="modal-footer bg-white justify-content-between border-top-0">
+            <button class="btn btn-outline-dark rounded-circle" onclick="goToPrevious(${data.id})">←</button>
+            <button class="btn btn-outline-dark rounded-circle next" onclick="goToNext(${data.id})">→</button>
+        </div>
+    `;
+}
+
+
+async function getTemplatePokemonModal(data) {
+    return `
+    <div class="text-center">${getTemplatePokemonHeader(data)}</div>
+    <div class="pokemon-types text-center mb-3">${getTemplatePokemonTypes(data.types)}</div>
+    <ul class="nav nav-tabs" id="pokemonTabs">${getTemplatePokemonNav()}</ul>
+    <div class="tab-content mt-3">${await getTemplatePokemonTabs(data)}</div>
+    `;
+}
+
+function getTemplatePokemonHeader(data) {
+    return `
+        <img src="${data.sprites.front_default}"  class="img-fluid" alt="${data.name}">
+        <p>N°${data.id}</p>
+    `;
+}
+
 function getTemplatePokemonTypes(Types) {
     return Types.map(type => {
-        return `<span class="type-badge type-${type.type}">${type.type}</span>`;
+        return `<span class="type-badge type-${type.type.name}">${type.type.name}</span>`;
     })
         .join('');
-}
-
-function modalPokemon(iPoke) {
-    return `
-        <div class="modal-body" id="modal-body">${getTemplatePokemonModal(iPoke)}
-        </div>
-    `
-}
-
-function getTemplatePokemonModal(iPoke) {
-    return `
-    <div class="text-center">${getTemplatePokemonHeader(iPoke)}</div>
-    <div class="pokemon-types text-center mb-3">${getTemplatePokemonTypes(PokemonList[iPoke].types)}</div>
-    <ul class="nav nav-tabs" id="pokemonTabs">${getTemplatePokemonNav()}</ul>
-    <div class="tab-content mt-3">${getTemplatePokemonTabs(iPoke)}</div>
-    <div class="modal-footer bg-white justify-content-between border-top-0">
-        <button class="btn btn-outline-dark rounded-circle" onclick="goToPrevious(${PokemonList[iPoke].id})">←</button>
-        <button class="btn btn-outline-dark rounded-circle next" onclick="goToNext(${PokemonList[iPoke].id})">→</button>
-    </div>
-    `;
 }
 
 function getTemplatePokemonNav() {
@@ -52,28 +65,28 @@ function getTemplatePokemonNav() {
     `
 }
 
-function getTemplatePokemonTabs(iPoke) {
+async function getTemplatePokemonTabs(data) {
     return `
-        <div class="tab-pane fade show active" id="about">${getTemplatePokemonAbout(iPoke)}</div>
-        <div class="tab-pane fade" id="stats">${getTemplatePokemonStats(iPoke)}</div>
-        <div class="tab-pane fade" id="evolution">${getTemplatePokemonEvolution(iPoke)}</div>
+        <div class="tab-pane fade show active" id="about">${getTemplatePokemonAbout(data)}</div>
+        <div class="tab-pane fade" id="stats">${getTemplatePokemonStats(data)}</div>
+        <div class="tab-pane fade" id="evolution">${await getTemplatePokemonEvolution(data)}</div>
     `;
 }
 
-function getTemplatePokemonAbout(iPoke) {
+function getTemplatePokemonAbout(data) {
     return `
-            <p><strong>Height:</strong> <span>${PokemonList[iPoke].height}</span></p>
-            <p><strong>Weight:</strong> <span>${PokemonList[iPoke].weight}</span></p>
-            <p><strong>Abilities:</strong> <span>${PokemonList[iPoke].abilities}</span></p>
+            <p><strong>Height:</strong> <span>${data.height}</span></p>
+            <p><strong>Weight:</strong> <span>${data.weight}</span></p>
+            <p><strong>Abilities:</strong> <span>${getPokemonAbilities(data)}</span></p>
     `;
 }
 
-function getTemplatePokemonStats(iPoke) {
-    return PokemonList[iPoke].stats.map(stat => {
+function getTemplatePokemonStats(data) {
+    return data.stats.map(stat => {
         return `
             <div class="mb-2">
                 <div class="d-flex justify-content-between mb-1">
-                    <span class="stat-label">${stat.name}</span>
+                    <span class="stat-label">${stat.stat.name}</span>
                     <span class="stat-value">${stat.base_stat}</span>
                 </div>
                 <div class="progress">
@@ -84,11 +97,12 @@ function getTemplatePokemonStats(iPoke) {
     }).join("");
 }
 
-function getTemplatePokemonEvolution(iPoke) {
+async function getTemplatePokemonEvolution(data) {
+    let evolutionStages = await getAllEvolutions(data);
     return `
         <div class="evolution-stages">
-            ${PokemonList[iPoke].species.map(stage => {
-        return `<div onclick="updateModal('${stage.Name}')" class="evolution-stage">
+            ${evolutionStages.map(stage => {
+        return `<div onclick="openModal('${stage.Name}')" class="evolution-stage">
                     <img src="${stage.Imagem}" class="img-fluid normal-img" alt="${stage.Name}">
                     <img src="${stage.ImagemShinny}" class="img-fluid shiny-img" alt="${stage.Name}">
                     <h5>${stage.Name}</h5>
@@ -96,13 +110,5 @@ function getTemplatePokemonEvolution(iPoke) {
                 `;
     }).join("↓")}
         </div>
-    `;
-}
-
-function getTemplatePokemonHeader(iPoke) {
-    return `
-        <img src="${PokemonList[iPoke].sprites.front_default}"  class="img-fluid" alt="${PokemonList[iPoke].name}">
-        <h5>${PokemonList[iPoke].name}</h5>
-        <p>N°${PokemonList[iPoke].id}</p>
     `;
 }

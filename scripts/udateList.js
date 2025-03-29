@@ -1,20 +1,25 @@
 function updatemaxLimit() {
-    maxLimit = +document.getElementById("maxLimit").value;
+    pageSize = +document.getElementById("maxLimit").value;
+    if (pageSize < 1)
+        pageSize = 1;
+
+    minLimit = 0;
+    maxLimit = pageSize;
     init();
 }
 
 function updatePokemonListBack() {
     if (minLimit > 0) {
-        minLimit -= maxLimit;
-        if(minLimit < 0){
-            minLimit = 0;
-        }
+        minLimit -= pageSize;
+        if (minLimit < 0) minLimit = 0;
+        maxLimit = minLimit + pageSize;
         init();
     }
 }
 
 function updatePokemonListNext() {
-    minLimit += maxLimit;
+    minLimit += pageSize;
+    maxLimit = minLimit + pageSize;
     init();
 }
 
@@ -33,19 +38,29 @@ async function PokemonListUpdate(pokemonToJSON) {
 }
 
 async function goToPrevious(id) {
-    showLoading();
     if (id > 1) {
         id--;
-        await creatModal(id);
+    } else {
+        id = 1025;
     }
-    hideLoading();
+
+    modal.hide();
+    document.activeElement.blur()
+    setTimeout(async () => {
+        await openModal(id);
+    }, 300);
 }
 
 async function goToNext(id) {
-    showLoading();
     if (id < 1025) {
         id++;
-        await creatModal(id);
+    } else {
+        id = 1;
     }
-    hideLoading();
+
+    modal.hide();
+    document.activeElement.blur()
+    setTimeout(async () => {
+        await openModal(id);
+    }, 300);
 }

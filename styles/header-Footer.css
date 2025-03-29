@@ -34,7 +34,8 @@ header img {
 }
 
 .pokedex-footer p {
-    margin: 5px 0;
+    font-size: 1rem;
+    margin: 20px 10px;
 }
 
 .pokedex-footer a {
@@ -46,13 +47,17 @@ header img {
     text-decoration: underline;
 }
 
-@media (max-width: 650px) {
+@media (max-width: 700px) {
     .header-container {
         flex-direction: column;
         gap: 10px;
     }
 
+    .header-search {
+        width: unset;
+    }
+
     footer p {
-        font-size: 0.6rem;
+        font-size: 0.875rem;
     }
 }

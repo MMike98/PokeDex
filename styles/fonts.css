@@ -3,20 +3,27 @@ body {
     line-height: 1.3;
     letter-spacing: 1px;
     text-transform: capitalize;
+    font-size: 0.875rem;
 }
 
 span {
-    font-size: 0.8rem;
+    font-size: 0.875rem;
+}
+
+p {
+    font-size: 1rem;
+    margin-bottom: 0;
 }
 
 .card-number,
 .modal-body p {
-    font-size: 0.75rem;
+    margin-bottom: 10px;
+    font-size: 0.875rem;
 }
 
 .modal-body strong,
 .modal-body span {
-    font-size: 0.8rem;
+    font-size: 0.875rem;
 }
 
 .card h5 {
@@ -27,7 +34,7 @@ span {
 .pokemon-types span {
     border-radius: 12px;
     padding: 3px 10px;
-    font-size: 0.75rem;
+    font-size: 0.875rem;
     color: white;
 }
 
@@ -38,10 +45,13 @@ span {
 
 .stat-label,
 .stat-value {
-    font-size: 0.7rem;
+    font-size: 0.875rem;
 }
 
 @media (max-width: 650px) {
+    p {
+        font-size: 0.875rem;
+    }
 
     .card-title,
     h5 {
@@ -49,44 +59,44 @@ span {
     }
 
     .progress-bar {
-        font-size: 0.6rem;
+        font-size: 0.875rem;
     }
 
     .nav-tabs .nav-link {
-        font-size: 0.65rem;
+        font-size: 0.875rem;
     }
 
     .card-number,
     .modal-body p {
-        font-size: 0.6rem;
+        font-size: 0.875rem;
     }
 
     .card h5 {
         margin-top: 5px;
-        font-size: 0.7rem;
+        font-size: 0.9rem;
     }
 
     .pokemon-types span {
-        font-size: 0.6rem;
+        font-size: 0.875rem;
     }
 
     #about {
         text-align: center;
     }
 
-    #about strong{
+    #about strong {
         display: flex;
         flex-direction: column;
-        font-size: 0.65rem;
+        font-size: 0.875rem;
         margin-bottom: 5px;
     }
 
-    #about span{
-        font-size: 0.65rem;
+    #about span {
+        font-size: 0.875rem;
     }
 
-    #stats span{
-        font-size: 0.6rem;
+    #stats span {
+        font-size: 0.875rem;
     }
 
     .progress {
@@ -98,6 +108,6 @@ span {
     }
 
     .evolution-stage h5 {
-        font-size: 0.8rem;
+        font-size: 0.875rem;
     }
 }

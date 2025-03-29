@@ -3,14 +3,34 @@ async function searchPokemons() {
     hideButtons();
     let search = document.getElementById("search").value.toLowerCase();
     PokemonList = [];
+
     if (PokemonTypes.includes(search)) {
         await searchType(search);
     }
-    else {
-        await searchNameId(search)
+    else if (search.length >= 3) {
+        await searchByPartialName(search);
     }
-    renderPokemons();
+    else {
+        await searchId(search);
+    }
     hideLoading();
+}
+
+async function searchByPartialName(search) {
+    let filtered = allPokemonList.filter(poke => poke.name.includes(search)
+    );
+    let cardsContainer = document.getElementById("cards");
+    cardsContainer.innerHTML = "";
+    if (filtered.length === 0) {
+        alert("Pokemon not found");
+        await init();
+        return;
+    }
+    for (let iPoke = 0; iPoke < filtered.length; iPoke++) {
+        let response = await fetch(filtered[iPoke].info);
+        let data = await response.json();
+        cardsContainer.innerHTML += getTemplatePokemon(data);
+    }
 }
 
 function hideButtons() {
@@ -18,18 +38,22 @@ function hideButtons() {
     document.getElementById("Btns").style.display = "none";
 }
 
-async function searchNameId(search) {
+async function searchId(search) {
     let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${search}`);
     if (response.status == 404) {
         alert("Pokemon not found");
+        console.clear();
         init();
         return;
     }
     else {
         let data = await response.json();
-        await PokemonListUpdate(data);
-    }
+        let cardsContainer = document.getElementById("cards");
+        cardsContainer.innerHTML = "";
+        cardsContainer.innerHTML += getTemplatePokemon(data);
+    };
 }
+
 
 async function searchType(search) {
     let response = await fetch(`https://pokeapi.co/api/v2/type/${search}`);

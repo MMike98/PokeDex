@@ -55,14 +55,7 @@
 .type-badge {
     padding: 6px 12px;
     border-radius: 15px;
-    font-size: 12px;
+    font-size: 0.875rem;
     color: white;
     font-weight: bold;
-}
-
-@media (max-width: 650px) {
-    .pokemon-card {
-        width: 150px;
-        height: 150px;
-    }
 }
