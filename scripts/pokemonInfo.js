@@ -11,7 +11,6 @@ function getPokemonAbilities(pokemonToJSON) {
 }
 
 function getPokemonTypes(pokemonToJSON) {
-    console.log(pokemonToJSON);
     return pokemonToJSON.types.map(type => {
         return {
             type: type.type.name,

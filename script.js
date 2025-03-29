@@ -1,6 +1,7 @@
 
 let PokemonTypes = ["normal", "fire", "water", "electric", "grass", "ice", "fighting", "poison", "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"];
 let PokemonList = [];
+let modal = new bootstrap.Modal(document.getElementById("pokemonModal"));
 let minLimit = 0;
 let maxLimit = 20;
 
@@ -34,9 +35,9 @@ async function renderPokemons() {
 }
 
 async function creatModal(id) {
-    let modal = new bootstrap.Modal(document.getElementById("pokemonModal"));
     let modalBody = document.getElementById("modal-content");
-    openModal(id, modal, modalBody);
+    await openModal(id, modal, modalBody);
+    modal.show();
 }
 
 async function openModal(id, modal, modalBody) {
@@ -45,7 +46,6 @@ async function openModal(id, modal, modalBody) {
     PokemonList= [];
     await PokemonListUpdate(data);
     modalBody.innerHTML = modalPokemon(0);
-    modal.show();
 }
 
 async function getPokemonImage(pokemonUrl) {
@@ -70,4 +70,3 @@ async function updateModal(name) {
     let id = data.id;
     creatModal(id);
 }
-

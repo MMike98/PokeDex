@@ -31,3 +31,21 @@ async function PokemonListUpdate(pokemonToJSON) {
         species: await getAllEvolutions(pokemonToJSON),
     });
 }
+
+async function goToPrevious(id) {
+    showLoading();
+    if (id > 1) {
+        id--;
+        await creatModal(id);
+    }
+    hideLoading();
+}
+
+async function goToNext(id) {
+    showLoading();
+    if (id < 1025) {
+        id++;
+        await creatModal(id);
+    }
+    hideLoading();
+}

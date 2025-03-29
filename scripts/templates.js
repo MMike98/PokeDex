@@ -12,7 +12,6 @@ function getTemplatePokemon(iPoke) {
 }
 
 function getTemplatePokemonTypes(Types) {
-    console.log(Types);
     return Types.map(type => {
         return `<span class="type-badge type-${type.type}">${type.type}</span>`;
     })
@@ -29,9 +28,13 @@ function modalPokemon(iPoke) {
 function getTemplatePokemonModal(iPoke) {
     return `
     <div class="text-center">${getTemplatePokemonHeader(iPoke)}</div>
-    <div class="pokemon-types text-center mb-3">${PokemonList[iPoke].types}</div>
+    <div class="pokemon-types text-center mb-3">${getTemplatePokemonTypes(PokemonList[iPoke].types)}</div>
     <ul class="nav nav-tabs" id="pokemonTabs">${getTemplatePokemonNav()}</ul>
     <div class="tab-content mt-3">${getTemplatePokemonTabs(iPoke)}</div>
+    <div class="modal-footer bg-white justify-content-between border-top-0">
+        <button class="btn btn-outline-dark rounded-circle" onclick="goToPrevious(${PokemonList[iPoke].id})">←</button>
+        <button class="btn btn-outline-dark rounded-circle next" onclick="goToNext(${PokemonList[iPoke].id})">→</button>
+    </div>
     `;
 }
 
@@ -81,8 +84,6 @@ function getTemplatePokemonStats(iPoke) {
     }).join("");
 }
 
-
-
 function getTemplatePokemonEvolution(iPoke) {
     return `
         <div class="evolution-stages">
@@ -105,4 +106,3 @@ function getTemplatePokemonHeader(iPoke) {
         <p>N°${PokemonList[iPoke].id}</p>
     `;
 }
-
