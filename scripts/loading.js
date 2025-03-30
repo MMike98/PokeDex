@@ -5,5 +5,5 @@ function showLoading() {
 function hideLoading() {
     setTimeout(() => {
         document.getElementById("loading-screen").style.display = "none";
-    }, 500)
+    }, 200)
 }
