@@ -11,9 +11,11 @@ let data;
 
 async function init() {
     showLoading();
+    document.getElementById("cards").style.display = "none";
     document.getElementById("Amount").style.display = "flex";
     document.getElementById("Btns").style.display = "flex";
     await loadAllPokemons();
+    document.getElementById("cards").style.display = "flex";
     hideLoading();
     await preLoadPokemons();
 }

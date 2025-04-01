@@ -103,14 +103,25 @@ async function searchByType(search) {
 async function getPokemonsInfoType(pokemonsData) {
     showLoading();
     hideButtons();
+    document.getElementById("cards").style.display = "none";
     cardsContainer.innerHTML = "";
     for (let iPoke = 0; iPoke < pokemonsData.length; iPoke++) {
-        let pokemon = await fetch(pokemonsData[iPoke].pokemon.url);
-        pokemonToJSON = await pokemon.json();
-        if (pokemonToJSON.id < 1300) {
-            cardsContainer.innerHTML += getTemplateTypePokemon(data);
+
+        let found = PokemonList.find(poke => poke.name === pokemonsData[iPoke].pokemon.name);
+
+        if (found) {
+            if (found.id < 1300) {
+                cardsContainer.innerHTML += getTemplatePokemon(found);
+            }
+        } else {
+            let pokemon = await fetch(pokemonsData[iPoke].pokemon.url);
+            pokemonToJSON = await pokemon.json();
+            if (pokemonToJSON.id < 1300) {
+                cardsContainer.innerHTML += getTemplatePokemon(pokemonToJSON);
+            }
         }
     }
+    document.getElementById("cards").style.display = "flex";
     hideLoading();
 }
 
