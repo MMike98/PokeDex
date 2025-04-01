@@ -1,74 +1,146 @@
 
 let PokemonTypes = ["normal", "fire", "water", "electric", "grass", "ice", "fighting", "poison", "ground", "flying", "psychic", "bug", "rock", "ghost", "dragon", "dark", "steel", "fairy"];
 let PokemonList = [];
-let allPokemonList = [];
 let modal = new bootstrap.Modal(document.getElementById("pokemonModal"));
 let minLimit = 0;
 let maxLimit = 20;
 let pageSize = 20;
-
+let total = 1025;
+let response;
+let data;
 
 async function init() {
     showLoading();
     document.getElementById("Amount").style.display = "flex";
     document.getElementById("Btns").style.display = "flex";
     await loadAllPokemons();
-    await renderPokemons();
     hideLoading();
+    await preLoadPokemons();
 }
 
 async function loadAllPokemons() {
-    allPokemonList = [];
-    PokemonList = [];
-    let response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1025`);
-    let data = await response.json();
-    data.results.forEach(pokemon => {
-        allPokemonList.push({
-            name: pokemon.name,
-            info: pokemon.url
-        });
-    });
-}
-
-async function renderPokemons() {
+    if (PokemonList.length < pageSize) {
+        data = await pokeApiFetch();
+    }
     let cardsContainer = document.getElementById("cards");
     cardsContainer.innerHTML = "";
     for (let iPoke = minLimit; iPoke < maxLimit; iPoke++) {
-        PokemonList.push({
-            name: allPokemonList[iPoke].name,
-            info: allPokemonList[iPoke].info
-        });
-        let pokemonInfo = await fetch(allPokemonList[iPoke].info);
+        let pokemonExistente = PokemonList.find(poke => poke.index === iPoke);
+        if (pokemonExistente) {
+            cardsContainer.innerHTML += getTemplatePokemon(pokemonExistente);
+        } else {
+            let pokemonInfo = await fetch(data.results[iPoke].url);
+            let pokemonToJSON = await pokemonInfo.json();
+            pokemonToJSON.index = iPoke;
+            PokemonList.push(pokemonToJSON);
+            cardsContainer.innerHTML += getTemplatePokemon(pokemonToJSON);
+        }
+    }
+}
+
+async function preLoadPokemons() {
+    if (PokemonList.length >= maxLimit * 2) return;
+    let data = await pokeApiFetch();
+    preLoadPokemonsNext(data);
+    preLoadPokemonsBack(data)
+}
+
+async function preLoadPokemonsNext(data) {
+    for (let iPoke = minLimit - pageSize; iPoke < minLimit; iPoke++) {
+        let realIndex = iPoke;
+        if (iPoke < 0) {
+            realIndex = total + iPoke;
+        }
+        if (realIndex >= 0 && realIndex < total) {
+            let alreadyLoaded = PokemonList.find(p => p.index === realIndex);
+            if (!alreadyLoaded) {
+                let pokemonInfo = await fetch(data.results[realIndex].url);
+                let pokemonToJSON = await pokemonInfo.json();
+                pokemonToJSON.index = realIndex;
+                PokemonList.push(pokemonToJSON);
+            }
+        }
+    }
+}
+
+async function preLoadPokemonsBack(data) {
+    for (let iPoke = maxLimit; iPoke < maxLimit + pageSize; iPoke++) {
+        if (iPoke >= data.results.length) continue;
+        let pokemonInfo = await fetch(data.results[iPoke].url);
         let pokemonToJSON = await pokemonInfo.json();
-        cardsContainer.innerHTML += getTemplatePokemon(pokemonToJSON);
-    }    
+        pokemonToJSON.index = iPoke;
+        PokemonList.push(pokemonToJSON);
+    }
+}
+
+async function pokeApiFetch() {
+    let response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=${total}`);
+    let data = await response.json();
+    return data;
 }
 
 async function openModal(name) {
-    showLoading();
     let modalBody = document.getElementById("modal-content");
-
-    let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-    let data = await response.json();
-
-    modalBody.innerHTML = await modalPokemon(data);
-    hideLoading();
-    modal.show();
+    let data = PokemonList.find(pokemon => pokemon.name === name);
+    if (data) {
+        modalBody.innerHTML = await modalPokemon(data);
+        modal.show();
+        preLoadmodal(data.id)
+    } else {
+        let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+        let data = await response.json();
+        PokemonList.push(data);
+        modalBody.innerHTML = await modalPokemon(data);
+        modal.show();
+        preLoadmodal(data.id)
+    }
 }
 
-
-async function getPokemonImage(pokemonUrl) {
-    let response = await fetch(pokemonUrl);
-    let data = await response.json();
-    let responseImage = await fetch(`https://pokeapi.co/api/v2/pokemon/${data.id}`);
-    let dataImage = await responseImage.json();
-    return dataImage.sprites.front_default;
+async function preLoadmodal(id) {
+    id++;
+    if (id > total) id = 1;
+    let found = PokemonList.find(poke => poke.id === id);
+    if (!found) {
+        await fetchById(id);
+    }
+    id -= 2;
+    if (id <= 0) id = total;
+    found = PokemonList.find(poke => poke.id === id);
+    if (!found) {
+        await fetchById(id);
+    }
 }
 
-async function getPokemonImageShinny(pokemonUrl) {
-    let response = await fetch(pokemonUrl);
+async function fetchById(id) {
+    let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
     let data = await response.json();
-    let responseImage = await fetch(`https://pokeapi.co/api/v2/pokemon/${data.id}`);
-    let dataImage = await responseImage.json();
-    return dataImage.sprites.front_shiny;
+    PokemonList.push(data);
+}
+
+async function getPokemonImage(name) {
+    let dataImage = PokemonList.find(pokemon => pokemon.name === name);
+    if (dataImage) {
+        return dataImage.sprites.front_default;
+    } else {
+        showLoading();
+        let dataImage = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+        let dataImageJSON = await dataImage.json();
+        PokemonList.push(dataImageJSON);
+        hideLoading();
+        return dataImageJSON.sprites.front_default;
+    }
+}
+
+async function getPokemonImageShinny(name) {
+    let dataImage = PokemonList.find(pokemon => pokemon.name === name);
+    if (dataImage) {
+        return dataImage.sprites.front_shiny;
+    } else {
+        showLoading();
+        let dataImage = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+        let dataImageJSON = await dataImage.json();
+        PokemonList.push(dataImageJSON);
+        hideLoading();
+        return dataImageJSON.sprites.front_shiny;
+    }
 }

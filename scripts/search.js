@@ -1,9 +1,14 @@
 let errorMsg = document.getElementById("error-message");
 let cardsContainer = document.getElementById("cards");
+let serachList = []
 
 async function searchPokemons() {
     let search = document.getElementById("search").value.toLowerCase();
-    PokemonList = [];
+    if (serachList.length === 0) {
+        let response = await fetch(`https://pokeapi.co/api/v2/pokemon?limit=1025`);
+        let data = await response.json();
+        serachList = data.results;
+    }
     if (search === "") {
         showErrorMessage("⚠️Oops! You need to enter a Pokémon name, ID or type first!");
         return;
@@ -41,11 +46,10 @@ async function searchByName(search) {
 }
 
 async function searchByPokeName(search) {
-    let filtered = allPokemonList.filter(poke => poke.name.includes(search));
+    let filtered = serachList.filter(poke => poke.name.includes(search));
     if (filtered.length === 0) {
         showErrorMessage("❌ Oops! No Pokémon found with that name, ID or type!");
-    }
-    else {
+    } else {
         await getByName(filtered);
     }
 }
@@ -55,26 +59,39 @@ async function getByName(filtered) {
     hideButtons();
     cardsContainer.innerHTML = "";
     for (let iPoke = 0; iPoke < filtered.length; iPoke++) {
-        let response = await fetch(filtered[iPoke].info);
-        let data = await response.json();
-        cardsContainer.innerHTML += getTemplatePokemon(data);
+        let found = PokemonList.find(poke => poke.name === filtered[iPoke].name);
+        if (found) {
+            cardsContainer.innerHTML += getTemplatePokemon(found);
+        } else {
+            let response = await fetch(filtered[iPoke].url);
+            let data = await response.json();
+            PokemonList.push(data);
+            cardsContainer.innerHTML += getTemplatePokemon(data);
+        }
     }
     hideLoading();
 }
 
 async function searchById(search) {
+    let id = parseInt(search);
+    if (id <= 0 || id > 1025) {
+        showErrorMessage("⚠️Oops! Pokémon ID must be between 1 and 1025!");
+        return;
+    }
+    let found = PokemonList.find(poke => poke.id === id);
     showLoading();
-    try {
-        hideButtons();
-        let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${search}`);
+    hideButtons();
+    if (found) {
+        cardsContainer.innerHTML = getTemplatePokemon(found);
+    } else {
+        let response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
         let data = await response.json();
+        PokemonList.push(data);
         cardsContainer.innerHTML = getTemplatePokemon(data);
-    } catch (error) {
-        console.clear();
-        showErrorMessage("❌ Oops! No Pokémon found with that name, ID or type!");
     }
     hideLoading();
 }
+
 
 
 async function searchByType(search) {
@@ -91,7 +108,7 @@ async function getPokemonsInfoType(pokemonsData) {
         let pokemon = await fetch(pokemonsData[iPoke].pokemon.url);
         pokemonToJSON = await pokemon.json();
         if (pokemonToJSON.id < 1300) {
-            cardsContainer.innerHTML += getTemplatePokemon(pokemonToJSON);
+            cardsContainer.innerHTML += getTemplateTypePokemon(data);
         }
     }
     hideLoading();
